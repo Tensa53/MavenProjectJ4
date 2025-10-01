@@ -1,0 +1,3 @@
+{
+  "org.example.benchmarks.UtenteBenchmark.testGetContoBancarioBench" : [ "org.example.utente.Utente.Utente(String,String,String,String,ContoBancario){L10;L11;L12;L13;L14;L15;L16;}", "org.example.utente.Utente.getContoBancario(){L35;}" ]
+}
