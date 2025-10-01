@@ -59,7 +59,7 @@ public class SurefireXMLExecutionTimes {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new FileWriter("surefire.json"), map);
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new FileWriter("report/surefire.json"), map);
 
     }
 

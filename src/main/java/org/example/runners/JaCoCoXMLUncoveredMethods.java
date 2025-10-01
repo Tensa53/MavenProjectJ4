@@ -77,7 +77,7 @@ public class JaCoCoXMLUncoveredMethods {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new FileWriter("uncovered.json"), uncoveredMethods);
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new FileWriter("report/uncovered.json"), uncoveredMethods);
 
     }
 
