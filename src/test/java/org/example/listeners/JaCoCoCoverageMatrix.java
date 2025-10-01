@@ -2,6 +2,10 @@ package org.example.listeners;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
 import org.jacoco.core.analysis.*;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataReader;
@@ -12,6 +16,8 @@ import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import java.io.*;
 import java.lang.management.ManagementFactory;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class JaCoCoCoverageMatrix {
@@ -96,10 +102,17 @@ public class JaCoCoCoverageMatrix {
                     if (methodCoverage.getInstructionCounter().getCoveredCount() > 0) {
                         StringBuilder methodName = new StringBuilder();
 
+                        int methodLine = methodCoverage.getFirstLine();
+
+                        if (!methodCoverage.getName().equals("<init>")) {
+                            methodLine = methodCoverage.getFirstLine() - 1;
+                        }
+
                         methodName.append(methodCoverage.getName()); // Get method name
                         String methodDescriptor = methodCoverage.getDesc();// Get method descriptor
 
-                        String signature = getMethodSignature(methodDescriptor);
+//                        String signature = getMethodSignature(methodDescriptor);
+                        String signature = getMethodSignatureParsed(methodLine, className);
 
                         methodName.append("(").append(signature).append(")");
 
@@ -130,6 +143,55 @@ public class JaCoCoCoverageMatrix {
             }
         }
         return coveredMethods;
+    }
+
+    private static String getMethodSignatureParsed(int methodLine, String className) {
+        String classSourceDir = "src/main/java/";
+
+        String classPath = classSourceDir + className +  ".java";
+
+//        System.out.println("classPath: " + classPath);
+
+        CompilationUnit cu = null;
+        try {
+            cu = StaticJavaParser.parse(Files.newInputStream(Paths.get(classPath)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        StringBuilder methodSignature = new StringBuilder();
+
+        cu.findAll(MethodDeclaration.class).forEach((methodDeclaration) -> {
+            methodDeclaration.getBegin().ifPresent(begin -> {
+                if (begin.line == methodLine) {
+                    methodDeclaration.getParameters().forEach(p -> {
+                        methodSignature.append(p.getType()).append(",");
+                    });
+                }
+            });
+        });
+
+        cu.findAll(ConstructorDeclaration.class).forEach(constructorDeclaration -> {
+            constructorDeclaration.getBegin().ifPresent(begin -> {
+                if (begin.line == methodLine) {
+                    constructorDeclaration.getParameters().forEach(p -> {
+                        methodSignature.append(p.getType()).append(",");
+                    });
+                }
+            });
+        });
+
+        int lastColumn = methodSignature.lastIndexOf(",");
+
+        if (lastColumn != -1) {
+            String sig = methodSignature.substring(0,lastColumn);
+//            System.out.println("Signature:" + sig);
+            return sig;
+        } else {
+//            System.out.println("Signature:" + signature.toString());
+
+            return methodSignature.toString();
+        }
     }
 
     private static String getMethodSignature(String methodDescriptor) {
