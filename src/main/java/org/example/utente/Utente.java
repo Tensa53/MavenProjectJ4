@@ -2,7 +2,11 @@ package org.example.utente;
 
 import org.example.banca.ContoBancario;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 public class Utente {
+
     public Utente(String name, String surname, String telephone, String address, ContoBancario contoBancario) {
         this.name = name;//aggiungo commento
         this.surname = surname;//aggiunto altro commento
@@ -16,8 +20,6 @@ public class Utente {
     }
 
     public String getSurname() {
-
-
         return surname;
     }
 
@@ -26,7 +28,6 @@ public class Utente {
     }
 
     public String getAddress(int a) {
-
         return address;
     }
 
@@ -44,6 +45,19 @@ public class Utente {
 
     public void setContoBancario(ContoBancario contoBancario) {
         this.contoBancario = contoBancario;
+    }
+
+    public void prova(ArrayList<String> prova, Set<String> provare) {
+        prova.add(name);
+        prova.add(surname);
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     private String name;

@@ -57,6 +57,7 @@
                     <jmx>true</jmx>
                     <excludes>
                         <exclude>org/example/benchmarks/**</exclude>
+                        <exclude>org/example/runners/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -86,6 +87,41 @@
                         </property>
                     </properties>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>run-custom-class-uncovered-methods</id>
+                        <phase>verify</phase> <!-- runs after test -->
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.example.runners.JaCoCoXMLUncoveredMethods</mainClass>
+                            <arguments>
+                                <argument>arg1</argument>
+                                <argument>arg2</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>run-custom-class-surefire-times</id>
+                        <phase>verify</phase> <!-- runs after test -->
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.example.runners.SurefireXMLExecutionTimes</mainClass>
+                            <arguments>
+                                <argument>arg1</argument>
+                                <argument>arg2</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
