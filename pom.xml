@@ -37,7 +37,6 @@
             <groupId>com.github.javaparser</groupId>
             <artifactId>javaparser-core</artifactId>
             <version>3.27.0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -56,8 +55,9 @@
                 <!-- Configurazione plugin per intercettare l'output -->
                 <configuration>
                     <jmx>true</jmx>
-<!--                    <output>tcpserver</output>-->
-<!--                    <address>localhost</address>-->
+                    <excludes>
+                        <exclude>org/example/benchmarks/**</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
