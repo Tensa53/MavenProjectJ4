@@ -24,6 +24,7 @@ public class JaCoCoCoverageMatrix {
 
     public static void updateCoverageMatrix(String testMethodName, String testClassName) {
         try {
+//            System.out.println("Updating coverage matrix...");
             // Connect to the platform MBean server
             MBeanServerConnection mbsc = ManagementFactory.getPlatformMBeanServer();
             ObjectName objectName = new ObjectName(JACOCO_MBEAN_NAME);
@@ -84,6 +85,7 @@ public class JaCoCoCoverageMatrix {
         }catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     private static String getSimpleClassName(String className) {
@@ -99,6 +101,7 @@ public class JaCoCoCoverageMatrix {
         for (IClassCoverage classCoverage : coverageBuilder.getClasses()) {
             if (classCoverage.getName().equals(className)) {
                 for (IMethodCoverage methodCoverage : classCoverage.getMethods()) {
+//                    System.out.println(methodCoverage.getName() + methodCoverage.getInstructionCounter().getCoveredCount());
                     if (methodCoverage.getInstructionCounter().getCoveredCount() > 0) {
                         StringBuilder methodName = new StringBuilder();
 
@@ -138,6 +141,8 @@ public class JaCoCoCoverageMatrix {
                         methodName.append(coveredlines);
 
                         coveredMethods.add(methodName.toString());
+
+//                        System.out.println(methodName);
                     }
                 }
             }
@@ -334,7 +339,7 @@ public class JaCoCoCoverageMatrix {
 
     private static void deleteOlderCoveredMethodsFromMatrix(String testName, ArrayList<String> fullyQualifiedCurrentMethods) {
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Set<String>> coverageMatrix = new HashMap<>();
+//        Map<String, Set<String>> coverageMatrix = new HashMap<>();
 
         // Read existing coverage-matrix.json if it exists
         File coverageFile = new File(COVERAGE_MATRIX_FILE);
@@ -372,5 +377,6 @@ public class JaCoCoCoverageMatrix {
     }
 
     private static final String JACOCO_MBEAN_NAME = "org.jacoco:type=Runtime";
-    private static final String COVERAGE_MATRIX_FILE = "coverage-matrix.json";
+    private static final String COVERAGE_MATRIX_FILE = "report/coverage-matrix.json";
+    private static Map<String, Set<String>> coverageMatrix = new HashMap<>();
 }

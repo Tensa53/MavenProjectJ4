@@ -22,7 +22,7 @@ public class UtenteBenchmark {
 
     @Benchmark
     @BenchmarkMode(Mode.SampleTime)
-    @Fork(value = 1, warmups = 1)
+    @Fork(1)
     public ContoBancario testGetContoBancarioBench(MyState myState) {
         return myState.utente.getContoBancario();
     }
