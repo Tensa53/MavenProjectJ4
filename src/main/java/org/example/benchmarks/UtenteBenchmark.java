@@ -5,6 +5,8 @@ import org.example.utente.Utente;
 import org.mockito.Mockito;
 import org.openjdk.jmh.annotations.*;
 
+@BenchmarkMode(Mode.SampleTime)
+@Fork(1)
 public class UtenteBenchmark {
 
     @State(Scope.Thread)
@@ -21,12 +23,28 @@ public class UtenteBenchmark {
     }
 
     @Benchmark
-    @BenchmarkMode(Mode.SampleTime)
-    @Fork(1)
+    public String testGetNameBench(MyState myState) {
+        return myState.utente.getName();
+    }
+
+    @Benchmark
+    public String testGetSurnameBench(MyState myState) {
+        return myState.utente.getSurname();
+    }
+
+    @Benchmark
+    public String testGetTelephoneBench(MyState myState) {
+        return myState.utente.getTelephone();
+    }
+
+    @Benchmark
+    public String testGetAddressBench(MyState myState) {
+        return myState.utente.getAddress(1);
+    }
+
+    @Benchmark
     public ContoBancario testGetContoBancarioBench(MyState myState) {
         return myState.utente.getContoBancario();
     }
-
-
 
 }
