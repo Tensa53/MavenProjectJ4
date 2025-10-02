@@ -32,7 +32,16 @@ public class JaCoCoCoverageMatrix {
             ObjectName objectName = new ObjectName(JACOCO_MBEAN_NAME);
 
             // Invoke the dump command with no reset (you can set to true if you want to reset coverage after each dump)
-            byte[] executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{true}, new String[]{"boolean"});
+            byte[] executionData = null;
+
+            if (suffix == "junit"){
+                executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{true}, new String[]{"boolean"});
+                JaCoCoAppender.appendExecutionData(executionData, new File("target/jacoco.exec"));
+            }
+            else if (suffix == "jmh"){
+                executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{false}, new String[]{"boolean"});
+                JaCoCoAppender.appendExecutionData(executionData, new File("target/jacoco-bench/jacoco-bench.exec"));
+            }
 
             // Use JaCoCo's ExecutionDataReader to parse the data
             ExecutionDataStore executionDataStore = new ExecutionDataStore();
