@@ -22,15 +22,17 @@ import java.util.*;
 
 public class JaCoCoCoverageMatrix {
 
-    public static void updateCoverageMatrix(String testMethodName, String testClassName) {
+    public static void updateCoverageMatrix(String testMethodName, String testClassName, String suffix) {
         try {
+            COVERAGE_MATRIX_FILE = "";
+            COVERAGE_MATRIX_FILE = COVERAGE_MATRIX_BASIC_FILENAME + "-" + suffix + ".json";
 //            System.out.println("Updating coverage matrix...");
             // Connect to the platform MBean server
             MBeanServerConnection mbsc = ManagementFactory.getPlatformMBeanServer();
             ObjectName objectName = new ObjectName(JACOCO_MBEAN_NAME);
 
             // Invoke the dump command with no reset (you can set to true if you want to reset coverage after each dump)
-            byte[] executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{false}, new String[]{"boolean"});
+            byte[] executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{true}, new String[]{"boolean"});
 
             // Use JaCoCo's ExecutionDataReader to parse the data
             ExecutionDataStore executionDataStore = new ExecutionDataStore();
@@ -377,6 +379,7 @@ public class JaCoCoCoverageMatrix {
     }
 
     private static final String JACOCO_MBEAN_NAME = "org.jacoco:type=Runtime";
-    private static final String COVERAGE_MATRIX_FILE = "report/coverage-matrix.json";
+    private static final String COVERAGE_MATRIX_BASIC_FILENAME = "report/coverage-matrix";
+    private static String COVERAGE_MATRIX_FILE = "";
     private static Map<String, Set<String>> coverageMatrix = new HashMap<>();
 }
