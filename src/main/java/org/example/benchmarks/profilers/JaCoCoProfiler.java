@@ -1,4 +1,4 @@
-package org.example.benchmarks;
+package org.example.benchmarks.profilers;
 
 import org.openjdk.jmh.infra.BenchmarkParams;
 import org.openjdk.jmh.infra.IterationParams;

@@ -1,4 +1,4 @@
-package org.example.benchmarks;
+package org.example.benchmarks.profilers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

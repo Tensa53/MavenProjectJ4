@@ -4,7 +4,7 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
-import static org.example.benchmarks.JaCoCoCoverageMatrix.updateCoverageMatrix;
+import static org.example.benchmarks.profilers.JaCoCoCoverageMatrix.updateCoverageMatrix;
 
 public class JaCoCoListener extends RunListener {
 

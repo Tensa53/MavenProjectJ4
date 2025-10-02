@@ -5,8 +5,11 @@ import org.example.utente.Utente;
 import org.mockito.Mockito;
 import org.openjdk.jmh.annotations.*;
 
+import java.util.concurrent.TimeUnit;
+
 @BenchmarkMode(Mode.SampleTime)
 @Fork(1)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class UtenteBenchmark {
 
     @State(Scope.Thread)
@@ -19,32 +22,47 @@ public class UtenteBenchmark {
         }
 
         public Utente utente;
-
     }
 
     @Benchmark
-    public String testGetNameBench(MyState myState) {
+    public String benchGetName(MyState myState) {
         return myState.utente.getName();
     }
 
     @Benchmark
-    public String testGetSurnameBench(MyState myState) {
+    public String benchGetSurname(MyState myState) {
         return myState.utente.getSurname();
     }
 
     @Benchmark
-    public String testGetTelephoneBench(MyState myState) {
+    public String benchGetTelephone(MyState myState) {
         return myState.utente.getTelephone();
     }
 
     @Benchmark
-    public String testGetAddressBench(MyState myState) {
+    public String benchGetAddress(MyState myState) {
         return myState.utente.getAddress(1);
     }
 
     @Benchmark
-    public ContoBancario testGetContoBancarioBench(MyState myState) {
+    public ContoBancario benchGetContoBancario(MyState myState) {
         return myState.utente.getContoBancario();
+    }
+
+    @Benchmark
+    public void benchSetName(MyState myState) {
+        myState.utente.setName("John");
+    }
+
+    @Benchmark
+    public void benchSetSurname(MyState myState) {
+        myState.utente.setSurname("Smith");
+    }
+
+    @Benchmark
+    public void benchSetConto(MyState myState) {
+        ContoBancario nuovoConto = Mockito.mock(ContoBancario.class);
+        myState.utente.setContoBancario(nuovoConto);
     }
 
 }

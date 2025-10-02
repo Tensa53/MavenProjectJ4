@@ -1,4 +1,4 @@
-package org.example.benchmarks;
+package org.example.benchmarks.profilers;
 
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;

@@ -1,5 +1,5 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-MavenProjectJ4,org.example.banca,ContoBancario,48,0,2,0,18,0,9,0,8,0
-MavenProjectJ4,org.example.utente,Utente,31,33,0,0,13,12,6,6,6,6
-MavenProjectJ4,org.example.utente.personale,Tecnico,43,0,0,0,18,0,9,0,9,0
-MavenProjectJ4,org.example.utente.personale,Amministratore,33,0,0,0,14,0,7,0,7,0
+MavenProjectJ4,org.example.banca,ContoBancario,0,48,0,2,0,18,0,9,0,8
+MavenProjectJ4,org.example.utente,Utente,19,45,0,0,7,18,3,9,3,9
+MavenProjectJ4,org.example.utente.personale,Tecnico,0,43,0,0,0,18,0,9,0,9
+MavenProjectJ4,org.example.utente.personale,Amministratore,0,33,0,0,0,14,0,7,0,7
