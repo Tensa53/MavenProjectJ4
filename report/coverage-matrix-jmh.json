@@ -1,3 +1,7 @@
 {
-  "org.example.benchmarks.UtenteBenchmark.testGetContoBancarioBench" : [ "org.example.utente.Utente.Utente(String,String,String,String,ContoBancario){L10;L11;L12;L13;L14;L15;L16;}", "org.example.utente.Utente.getContoBancario(){L35;}" ]
+  "org.example.benchmarks.UtenteBenchmark.testGetAddressBench" : [ "org.example.utente.Utente.getAddress(int){L31;}", "org.example.utente.Utente.Utente(String,String,String,String,ContoBancario){L10;L11;L12;L13;L14;L15;L16;}" ],
+  "org.example.benchmarks.UtenteBenchmark.testGetContoBancarioBench" : [ "org.example.utente.Utente.Utente(String,String,String,String,ContoBancario){L10;L11;L12;L13;L14;L15;L16;}", "org.example.utente.Utente.getContoBancario(){L35;}" ],
+  "org.example.benchmarks.UtenteBenchmark.testGetNameBench" : [ "org.example.utente.Utente.getName(){L19;}", "org.example.utente.Utente.Utente(String,String,String,String,ContoBancario){L10;L11;L12;L13;L14;L15;L16;}" ],
+  "org.example.benchmarks.UtenteBenchmark.testGetSurnameBench" : [ "org.example.utente.Utente.getSurname(){L23;}", "org.example.utente.Utente.Utente(String,String,String,String,ContoBancario){L10;L11;L12;L13;L14;L15;L16;}" ],
+  "org.example.benchmarks.UtenteBenchmark.testGetTelephoneBench" : [ "org.example.utente.Utente.Utente(String,String,String,String,ContoBancario){L10;L11;L12;L13;L14;L15;L16;}", "org.example.utente.Utente.getTelephone(){L27;}" ]
 }
