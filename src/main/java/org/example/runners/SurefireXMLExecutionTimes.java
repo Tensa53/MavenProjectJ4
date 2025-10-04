@@ -18,6 +18,8 @@ import java.util.Map;
 
 public class SurefireXMLExecutionTimes {
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
+        String xmlPath = args[0];
+        String outputPath = args[1];
 
         File dir = new File(xmlPath);
         File[] files = dir.listFiles(new FilenameFilter() {
@@ -59,7 +61,7 @@ public class SurefireXMLExecutionTimes {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new FileWriter("report/surefire.json"), map);
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new FileWriter(outputPath), map);
 
     }
 
