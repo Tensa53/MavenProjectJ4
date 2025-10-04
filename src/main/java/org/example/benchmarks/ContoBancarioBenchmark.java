@@ -33,7 +33,7 @@ public class ContoBancarioBenchmark {
     }
 
     @Benchmark
-    public void benchPrelievo_InsufficienteSaldoBench(MyState myState) {
+    public void benchPrelievo_InsufficienteSaldo(MyState myState) {
         myState.contoBancario.prelievo(150);
     }
 

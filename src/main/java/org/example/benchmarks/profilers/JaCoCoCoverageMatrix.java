@@ -2,30 +2,29 @@ package org.example.benchmarks.profilers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.javaparser.StaticJavaParser;
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.body.ConstructorDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
 import org.jacoco.core.analysis.*;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
-
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import java.io.*;
 import java.lang.management.ManagementFactory;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
+import static org.example.benchmarks.profilers.MethodSignatureRetriever.getMethodSignatureParsed;
 
 public class JaCoCoCoverageMatrix {
 
-    public static void updateCoverageMatrix(String testMethodName, String testClassName, String suffix) {
+    private static final String JACOCO_MBEAN_NAME = "org.jacoco:type=Runtime";
+    private static final String COVERAGE_MATRIX_BASIC_FILENAME = "coverage-matrix.json";
+    private static String COVERAGE_MATRIX_FILEPATH = "";
+    private static Map<String, Set<String>> coverageMatrix = new HashMap<>();
+
+    public static void updateCoverageMatrix(String testMethodName, String testClassName, String path) {
         try {
-            COVERAGE_MATRIX_FILE = "";
-            COVERAGE_MATRIX_FILE = COVERAGE_MATRIX_BASIC_FILENAME + "-" + suffix + ".json";
+            COVERAGE_MATRIX_FILEPATH = "";
+            COVERAGE_MATRIX_FILEPATH = path + COVERAGE_MATRIX_BASIC_FILENAME;
 //            System.out.println("Updating coverage matrix...");
             // Connect to the platform MBean server
             MBeanServerConnection mbsc = ManagementFactory.getPlatformMBeanServer();
@@ -34,13 +33,15 @@ public class JaCoCoCoverageMatrix {
             // Invoke the dump command with no reset (you can set to true if you want to reset coverage after each dump)
             byte[] executionData = null;
 
-            if (suffix == "junit"){
+            System.out.println(path);
+
+            if (path == "report/junit/"){
                 executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{true}, new String[]{"boolean"});
                 JaCoCoAppender.appendExecutionData(executionData, new File("target/jacoco.exec"));
             }
-            else if (suffix == "jmh"){
+            else if (path == "report/jmh/"){
                 executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{false}, new String[]{"boolean"});
-                JaCoCoAppender.appendExecutionData(executionData, new File("target/jacoco-bench/jacoco-bench.exec"));
+                JaCoCoAppender.appendExecutionData(executionData, new File("target/jacoco-bench.exec"));
             }
 
             // Use JaCoCo's ExecutionDataReader to parse the data
@@ -57,8 +58,10 @@ public class JaCoCoCoverageMatrix {
             CoverageBuilder coverageBuilder = new CoverageBuilder();
             Analyzer analyzer = new Analyzer(executionDataStore, coverageBuilder);
 
+//            System.out.println(executionDataStore.getContents().toString());
+
             // Specify the directory where your compiled classes are located
-            File classesDir = new File("target/classes/"); // Adjust the path as needed
+            File classesDir = new File("target/classes"); // Adjust the path as needed
 
             ArrayList<String> fullyQualifiedCurrentMethods = new ArrayList<>();
 
@@ -81,7 +84,7 @@ public class JaCoCoCoverageMatrix {
                     ArrayList<String> coveredMethodsFullyQualified = new ArrayList<>();
                     for (String method : coveredMethods) {
                         if(method.contains("<init>"))
-                            method = method.replace("<init>", getSimpleClassName(className));
+                            method = method.replace("<init>", className.substring(className.lastIndexOf('.') + 1));
                         fullyQualifiedCurrentMethods.add(className+"."+method);
                         coveredMethodsFullyQualified.add(className+"."+method);
                     }
@@ -99,17 +102,11 @@ public class JaCoCoCoverageMatrix {
 
     }
 
-    private static String getSimpleClassName(String className) {
-        if (className.contains(".")) {
-            return className.substring(className.lastIndexOf('.') + 1);
-        }
-        return className;
-    }
-
     private static Set<String> getCoveredMethods(CoverageBuilder coverageBuilder, String className) {
         Set<String> coveredMethods = new HashSet<>();
         className = className.replace(".", "/");
         for (IClassCoverage classCoverage : coverageBuilder.getClasses()) {
+//            System.out.println(classCoverage.getName());
             if (classCoverage.getName().equals(className)) {
                 for (IMethodCoverage methodCoverage : classCoverage.getMethods()) {
 //                    System.out.println(methodCoverage.getName() + methodCoverage.getInstructionCounter().getCoveredCount());
@@ -125,7 +122,7 @@ public class JaCoCoCoverageMatrix {
                         methodName.append(methodCoverage.getName()); // Get method name
                         String methodDescriptor = methodCoverage.getDesc();// Get method descriptor
 
-//                        String signature = getMethodSignature(methodDescriptor);
+//                        String signature = getMethodSignatureDescriptor(methodDescriptor);
                         String signature = getMethodSignatureParsed(methodLine, className);
 
                         methodName.append("(").append(signature).append(")");
@@ -161,163 +158,12 @@ public class JaCoCoCoverageMatrix {
         return coveredMethods;
     }
 
-    private static String getMethodSignatureParsed(int methodLine, String className) {
-        String classSourceDir = "src/main/java/";
-
-        String classPath = classSourceDir + className +  ".java";
-
-//        System.out.println("classPath: " + classPath);
-
-        CompilationUnit cu = null;
-        try {
-            cu = StaticJavaParser.parse(Files.newInputStream(Paths.get(classPath)));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        StringBuilder methodSignature = new StringBuilder();
-
-        cu.findAll(MethodDeclaration.class).forEach((methodDeclaration) -> {
-            methodDeclaration.getBegin().ifPresent(begin -> {
-                if (begin.line == methodLine) {
-                    methodDeclaration.getParameters().forEach(p -> {
-                        methodSignature.append(p.getType()).append(",");
-                    });
-                }
-            });
-        });
-
-        cu.findAll(ConstructorDeclaration.class).forEach(constructorDeclaration -> {
-            constructorDeclaration.getBegin().ifPresent(begin -> {
-                if (begin.line == methodLine) {
-                    constructorDeclaration.getParameters().forEach(p -> {
-                        methodSignature.append(p.getType()).append(",");
-                    });
-                }
-            });
-        });
-
-        int lastColumn = methodSignature.lastIndexOf(",");
-
-        if (lastColumn != -1) {
-            String sig = methodSignature.substring(0,lastColumn);
-//            System.out.println("Signature:" + sig);
-            return sig;
-        } else {
-//            System.out.println("Signature:" + signature.toString());
-
-            return methodSignature.toString();
-        }
-    }
-
-    private static String getMethodSignature(String methodDescriptor) {
-
-        String parameters = methodDescriptor.substring(methodDescriptor.indexOf("(") + 1, methodDescriptor.indexOf(")"));
-
-        String array = "[]";
-
-        int i = 0;
-
-        int len = parameters.length();
-
-        StringBuilder signature = new StringBuilder();
-
-        while (i < len) {
-            String typeName;
-            //squares to know the new position for substring: 1 in case of array, 2 in case of matrix
-            int squares = 0;
-            //skip to know the new position for substring: 2 in case of class instance ("type letter" and semicolon)
-            int skip = 2;
-            char character = parameters.charAt(i);
-
-            if (character == '[') {
-                if (parameters.charAt(i + 1) == '[') {
-                    squares = 2;
-                    typeName = getTypeNamebyDescriptor(parameters.substring(i + squares));
-                    signature.append(typeName).append(array).append(array).append(",");
-                    if (parameters.charAt(i + squares) == 'L') {
-                        //in case of a class, other than the letter, the descriptor tells also the name of the class
-                        i += squares + skip + typeName.length();
-                    } else {
-                        i += squares + 1;
-                    }
-                } else {
-                    squares = 1;
-                    typeName = getTypeNamebyDescriptor(parameters.substring(i + 1));
-                    signature.append(typeName).append(array).append(",");
-                    if (parameters.charAt(i + squares) == 'L') {
-                        i += squares + skip + typeName.length();
-                    } else {
-                        i += squares + 1;
-                    }
-                }
-            } else {
-                typeName = getTypeNamebyDescriptor(parameters.substring(i));
-                signature.append(typeName).append(",");
-                if (parameters.charAt(i) == 'L') {
-                    i += skip + typeName.length();
-                } else {
-                    i += 1;
-                }
-            }
-        }
-
-        int lastColumn = signature.lastIndexOf(",");
-
-        if (lastColumn != -1) {
-            String sig = signature.substring(0,lastColumn);
-//            System.out.println("Signature:" + sig);
-            return sig;
-        } else {
-//            System.out.println("Signature:" + signature.toString());
-
-            return signature.toString();
-        }
-
-    }
-
-    private static String getTypeNamebyDescriptor(String desc) {
-        String name = "";
-
-        switch (desc.charAt(0)) {
-            case 'B':
-                name = "byte";
-                break;
-            case 'C':
-                name = "char";
-                break;
-            case 'D':
-                name = "double";
-                break;
-            case 'F':
-                name = "float";
-                break;
-            case 'I':
-                name = "int";
-                break;
-            case 'J':
-                name = "long";
-                break;
-            case 'S':
-                name = "short";
-                break;
-            case 'Z':
-                name = "boolean";
-                break;
-            case 'L':
-                String s = desc.substring(1,desc.indexOf(";"));
-                name = s.replace("/",".");
-        }
-
-        return name;
-    }
-
     private static void updateCoverageMatrixFile(String testName, ArrayList<String> coveredMethods) {
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Set<String>> coverageMatrix = new HashMap<>();
+//        Map<String, Set<String>> coverageMatrix = new HashMap<>();
 
         // Read existing coverage-matrix.json if it exists
-        File coverageFile = new File(COVERAGE_MATRIX_FILE);
+        File coverageFile = new File(COVERAGE_MATRIX_FILEPATH);
         if (coverageFile.exists()) {
             try {
                 coverageMatrix = objectMapper.readValue(coverageFile, new TypeReference<Map<String, Set<String>>>() {});
@@ -353,7 +199,7 @@ public class JaCoCoCoverageMatrix {
 //        Map<String, Set<String>> coverageMatrix = new HashMap<>();
 
         // Read existing coverage-matrix.json if it exists
-        File coverageFile = new File(COVERAGE_MATRIX_FILE);
+        File coverageFile = new File(COVERAGE_MATRIX_FILEPATH);
         if (coverageFile.exists()) {
             try {
                 coverageMatrix = objectMapper.readValue(coverageFile, new TypeReference<Map<String, Set<String>>>() {});
@@ -386,9 +232,4 @@ public class JaCoCoCoverageMatrix {
             System.out.println("Failed to write coverage-matrix.json");
         }
     }
-
-    private static final String JACOCO_MBEAN_NAME = "org.jacoco:type=Runtime";
-    private static final String COVERAGE_MATRIX_BASIC_FILENAME = "report/coverage-matrix";
-    private static String COVERAGE_MATRIX_FILE = "";
-    private static Map<String, Set<String>> coverageMatrix = new HashMap<>();
 }

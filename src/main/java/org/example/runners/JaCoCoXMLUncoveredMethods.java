@@ -27,6 +27,9 @@ public class JaCoCoXMLUncoveredMethods {
 
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
 
+        String xmlPath = args[0];
+        String outputPath = args[1];
+
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
         DocumentBuilder builder = dbf.newDocumentBuilder();
@@ -77,7 +80,7 @@ public class JaCoCoXMLUncoveredMethods {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new FileWriter("report/uncovered.json"), uncoveredMethods);
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new FileWriter(outputPath), uncoveredMethods);
 
     }
 
@@ -233,7 +236,4 @@ public class JaCoCoXMLUncoveredMethods {
 
         return name;
     }
-
-
-    private static String xmlPath = "target/site/jacoco/jacoco.xml";
 }

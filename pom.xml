@@ -113,8 +113,8 @@
                         <configuration>
                             <mainClass>org.example.runners.JaCoCoXMLUncoveredMethods</mainClass>
                             <arguments>
-                                <argument>arg1</argument>
-                                <argument>arg2</argument>
+                                <argument>target/site/jacoco/jacoco.xml</argument>
+                                <argument>report/junit/uncovered.json</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -127,8 +127,8 @@
                         <configuration>
                             <mainClass>org.example.runners.SurefireXMLExecutionTimes</mainClass>
                             <arguments>
-                                <argument>arg1</argument>
-                                <argument>arg2</argument>
+                                <argument>target/surefire-reports</argument>
+                                <argument>report/junit/times.json</argument>
                             </arguments>
                         </configuration>
                     </execution>
