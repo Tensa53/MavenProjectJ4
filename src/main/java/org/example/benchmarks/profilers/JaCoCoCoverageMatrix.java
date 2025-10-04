@@ -33,7 +33,7 @@ public class JaCoCoCoverageMatrix {
             // Invoke the dump command with no reset (you can set to true if you want to reset coverage after each dump)
             byte[] executionData = null;
 
-            System.out.println(path);
+//            System.out.println(path);
 
             if (path == "report/junit/"){
                 executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{true}, new String[]{"boolean"});
