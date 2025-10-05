@@ -6,7 +6,7 @@
   "org.example.benchmarks.AmministratoreBench.benchSetName" : [ "org.example.utente.personale.Amministratore.Amministratore(String,String,String){L4;L5;L6;L7;L8;}", "org.example.utente.personale.Amministratore.setName(String){L23;L24;}" ],
   "org.example.benchmarks.AmministratoreBench.benchSetSurname" : [ "org.example.utente.personale.Amministratore.setSurname(String){L27;L28;}", "org.example.utente.personale.Amministratore.Amministratore(String,String,String){L4;L5;L6;L7;L8;}" ],
   "org.example.benchmarks.ContoBancarioBenchmark.benchGetSaldo" : [ "org.example.banca.ContoBancario.getSaldo(){L14;}", "org.example.banca.ContoBancario.ContoBancario(String,int){L4;L5;L6;L7;}" ],
-  "org.example.benchmarks.ContoBancarioBenchmark.benchPrelievo_InsufficienteSaldoBench" : [ "org.example.banca.ContoBancario.ContoBancario(String,int){L4;L5;L6;L7;}", "org.example.banca.ContoBancario.prelievo(int){L34;L35;}" ],
+  "org.example.benchmarks.ContoBancarioBenchmark.benchPrelievo_InsufficienteSaldo" : [ "org.example.banca.ContoBancario.ContoBancario(String,int){L4;L5;L6;L7;}", "org.example.banca.ContoBancario.prelievo(int){L34;L35;}" ],
   "org.example.benchmarks.ContoBancarioBenchmark.benchPrelievo_SufficienteSaldo" : [ "org.example.banca.ContoBancario.ContoBancario(String,int){L4;L5;L6;L7;}", "org.example.banca.ContoBancario.prelievo(int){L34;L37;L38;}" ],
   "org.example.benchmarks.ContoBancarioBenchmark.benchSetId" : [ "org.example.banca.ContoBancario.setId(String){L18;L19;}", "org.example.banca.ContoBancario.ContoBancario(String,int){L4;L5;L6;L7;}" ],
   "org.example.benchmarks.ContoBancarioBenchmark.benchSetSaldo" : [ "org.example.banca.ContoBancario.ContoBancario(String,int){L4;L5;L6;L7;}", "org.example.banca.ContoBancario.setSaldo(int){L22;L23;}" ],
