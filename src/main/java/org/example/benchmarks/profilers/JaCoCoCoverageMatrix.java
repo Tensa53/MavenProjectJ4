@@ -19,30 +19,32 @@ public class JaCoCoCoverageMatrix {
     private static final String JACOCO_MBEAN_NAME = "org.jacoco:type=Runtime";
     private static final String COVERAGE_MATRIX_BASIC_FILENAME = "coverage-matrix.json";
     private static String COVERAGE_MATRIX_FILEPATH = "";
-    private static Map<String, Set<String>> coverageMatrix = new HashMap<>();
 
-    public static void updateCoverageMatrix(String testMethodName, String testClassName, String path) {
+    public static void updateCoverageMatrix(String testMethodName, String testClassName, String outputPath, String execFile, String classesPath) {
         try {
             COVERAGE_MATRIX_FILEPATH = "";
-            COVERAGE_MATRIX_FILEPATH = path + COVERAGE_MATRIX_BASIC_FILENAME;
+            COVERAGE_MATRIX_FILEPATH = outputPath + COVERAGE_MATRIX_BASIC_FILENAME;
 //            System.out.println("Updating coverage matrix...");
             // Connect to the platform MBean server
             MBeanServerConnection mbsc = ManagementFactory.getPlatformMBeanServer();
             ObjectName objectName = new ObjectName(JACOCO_MBEAN_NAME);
 
             // Invoke the dump command with no reset (you can set to true if you want to reset coverage after each dump)
-            byte[] executionData = null;
+//            Object[] flush = outputPath.equals("report/junit/")? new Object[]{true}: outputPath.equals("report/jmh/")? new Object[]{true}: null;
 
-//            System.out.println(path);
+            byte[] executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{true}, new String[]{"boolean"});
+            JaCoCoAppender.appendExecutionData(executionData, new File(execFile));
 
-            if (path == "report/junit/"){
-                executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{true}, new String[]{"boolean"});
-                JaCoCoAppender.appendExecutionData(executionData, new File("target/jacoco.exec"));
-            }
-            else if (path == "report/jmh/"){
-                executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{false}, new String[]{"boolean"});
-                JaCoCoAppender.appendExecutionData(executionData, new File("target/jacoco-bench.exec"));
-            }
+//            System.out.println(outputPath);
+
+//            if (outputPath == "report/junit/"){
+//                executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{true}, new String[]{"boolean"});
+//                JaCoCoAppender.appendExecutionData(executionData, new File("target/jacoco.exec"));
+//            }
+//            else if (outputPath == "report/jmh/"){
+//                executionData = (byte[]) mbsc.invoke(objectName, "getExecutionData", new Object[]{false}, new String[]{"boolean"});
+//                JaCoCoAppender.appendExecutionData(executionData, new File("target/jacoco-bench.exec"));
+//            }
 
             // Use JaCoCo's ExecutionDataReader to parse the data
             ExecutionDataStore executionDataStore = new ExecutionDataStore();
@@ -61,7 +63,7 @@ public class JaCoCoCoverageMatrix {
 //            System.out.println(executionDataStore.getContents().toString());
 
             // Specify the directory where your compiled classes are located
-            File classesDir = new File("target/classes"); // Adjust the path as needed
+            File classesDir = new File(classesPath); // Adjust the classesDir as needed
 
             ArrayList<String> fullyQualifiedCurrentMethods = new ArrayList<>();
 
@@ -160,7 +162,7 @@ public class JaCoCoCoverageMatrix {
 
     private static void updateCoverageMatrixFile(String testName, ArrayList<String> coveredMethods) {
         ObjectMapper objectMapper = new ObjectMapper();
-//        Map<String, Set<String>> coverageMatrix = new HashMap<>();
+        Map<String, Set<String>> coverageMatrix = new HashMap<>();
 
         // Read existing coverage-matrix.json if it exists
         File coverageFile = new File(COVERAGE_MATRIX_FILEPATH);
@@ -196,7 +198,7 @@ public class JaCoCoCoverageMatrix {
 
     private static void deleteOlderCoveredMethodsFromMatrix(String testName, ArrayList<String> fullyQualifiedCurrentMethods) {
         ObjectMapper objectMapper = new ObjectMapper();
-//        Map<String, Set<String>> coverageMatrix = new HashMap<>();
+        Map<String, Set<String>> coverageMatrix = new HashMap<>();
 
         // Read existing coverage-matrix.json if it exists
         File coverageFile = new File(COVERAGE_MATRIX_FILEPATH);
@@ -212,12 +214,16 @@ public class JaCoCoCoverageMatrix {
         // Update the coverage matrix
         Set<String> existingMethods = coverageMatrix.computeIfAbsent(testName, k -> new HashSet<>());
 
+//        System.out.println("Pre remove: " + existingMethods.toString());
+
         Set<String> methodsToRemove = new HashSet<>(existingMethods);
         for (String method : methodsToRemove) {
             if (!fullyQualifiedCurrentMethods.contains(method)) {
                 existingMethods.remove(method);
             }
         }
+
+//        System.out.println("Post remove: " + existingMethods.toString());
 
         // Write the updated coverage matrix back to the file, creating the file if it doesn't exist
         try {

@@ -43,7 +43,7 @@ public class JaCoCoProfiler implements InternalProfiler {
             String className = benchmarkFqn.substring(0, lastDot);
             String methodName = benchmarkFqn.substring(lastDot + 1);
 
-            JaCoCoCoverageMatrix.updateCoverageMatrix(methodName, className, "report/jmh/");
+            JaCoCoCoverageMatrix.updateCoverageMatrix(methodName, className, "report/jmh/", "target/bench.exec", "target/classes/");
         }
 
         return Collections.emptyList();
