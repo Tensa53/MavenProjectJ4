@@ -32,18 +32,40 @@ public class JaCoCoProfiler implements InternalProfiler {
     @Override
     public Collection<? extends Result<?>> afterIteration(BenchmarkParams benchmarkParams, IterationParams iterationParams,
                                                           IterationResult result) {
-        System.out.println("Iteration finished for " + benchmarkParams.getBenchmark());
+//        System.out.println("Iteration finished for " + benchmarkParams.getBenchmark());
 
         String benchmarkFqn = benchmarkParams.getBenchmark();
 
         IterationType type = iterationParams.getType();
 
         if (type == IterationType.MEASUREMENT && iterationCounter == iterationParams.getCount()) {
+            System.out.println("\n All iteration finished for:" + benchmarkFqn);
+
             int lastDot = benchmarkFqn.lastIndexOf('.');
             String className = benchmarkFqn.substring(0, lastDot);
             String methodName = benchmarkFqn.substring(lastDot + 1);
 
-            JaCoCoCoverageMatrix.updateCoverageMatrix(methodName, className, "report/jmh/", "target/bench.exec", "target/classes/");
+            if (!benchmarkParams.getParamsKeys().isEmpty()) {
+                StringBuilder params = new StringBuilder();
+                params.append("#");
+                for (String key : benchmarkParams.getParamsKeys()) {
+                    String param = key + "=" + benchmarkParams.getParam(key);
+                    params.append(param);
+                    params.append("_");
+                }
+
+                int lastUnderscore = params.lastIndexOf("_");
+
+                if (lastUnderscore != -1) {
+                    String pam = params.substring(0, lastUnderscore);
+                    methodName = methodName + pam;
+                } else {
+                    methodName = methodName + params;
+                }
+
+            }
+
+            JaCoCoCoverageMatrix.updateCoverageMatrix(methodName, className, "reports-coverage/jmh/", "target/bench.exec", "target/classes/");
         }
 
         return Collections.emptyList();
