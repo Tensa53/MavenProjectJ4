@@ -6,7 +6,7 @@ rm -r reports-coverage/junit/*
 
 mvn clean install
 
-cp -r target/site/jacoco/ reports-coverage/junit
+cp -r target/site/jacoco/ reports-coverage/junit/
 
 # commands to generate jacoco report and coverage matrix from jmh benchmarks
 # minimal jmh conf used: -f 1 -i 1 -wi 0 -bm ss -tu ms (1 fork-iteration, no warmup, single-shot, time in milliseconds)
