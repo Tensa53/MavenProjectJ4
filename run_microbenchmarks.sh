@@ -96,12 +96,12 @@ for ((i = 0; i < total; i++)); do
   method_name=$(echo "$bm" | awk -F'.' '{print $NF}')
 
   #output_dir="$class_name/$method_name"
-  mkdir -p reports-time/jmh/"$class_name"
+  mkdir -p "$class_name"
 
   #echo "  -> Execution $i: preparing the system"
   #prepare_system
   echo "  -> Execution $i: running benchmark"
-  nice -n -20 java -Xms8G -Xmx8G -jar "$JAR_PATH" "$bm"  $COMMON_ARGS -rff "reports-time/jmh/$class_name/$method_name-benchmark-results.json" -rf json
+  nice -n -20 java -Xms8G -Xmx8G -jar "$JAR_PATH" "$bm"  $COMMON_ARGS -rff "$class_name/$method_name-benchmark-results.json" -rf json
 done
 
 #echo ">>> All benchmarks executed, restoring system"
