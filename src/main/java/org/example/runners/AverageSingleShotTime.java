@@ -19,16 +19,19 @@ public class AverageSingleShotTime {
         File[] subDirs = dir.listFiles();
 
         for (File subDir : subDirs) {
-            for (File file : subDir.listFiles()) {
-                JsonNode jsonNode =  objectMapper.readTree(file);
+            if (subDir.isDirectory()) {
+                for (File file : subDir.listFiles()) {
+                    JsonNode jsonNode =  objectMapper.readTree(file);
 
-                if (jsonNode.get(1) != null){
-                    for(JsonNode arrayNode : jsonNode) {
-                        writeJMHTimes(arrayNode);
+                    if (jsonNode.get(1) != null){
+                        for(JsonNode arrayNode : jsonNode) {
+                            writeJMHTimes(arrayNode);
+                        }
+                    } else {
+                        writeJMHTimes(jsonNode.get(0));
                     }
-                } else {
-                    writeJMHTimes(jsonNode.get(0));
                 }
+
             }
         }
 
