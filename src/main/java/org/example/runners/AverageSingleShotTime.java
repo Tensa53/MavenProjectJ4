@@ -88,5 +88,5 @@ public class AverageSingleShotTime {
         map.put(benchName.toString(), average);
     }
 
-    private  static Map<String, BigDecimal> map = new LinkedHashMap<>();
+    private  static TreeMap<String, BigDecimal> map = new TreeMap<>();
 }

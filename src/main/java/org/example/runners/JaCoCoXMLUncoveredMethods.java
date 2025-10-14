@@ -18,10 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class JaCoCoXMLUncoveredMethods {
 
@@ -36,7 +33,7 @@ public class JaCoCoXMLUncoveredMethods {
         Document doc = builder.parse(new File(xmlPath));
         NodeList classNodes = doc.getElementsByTagName("class");
 
-        Map<String, Set<String>> uncoveredMethods = new HashMap<>();
+        TreeMap<String, Set<String>> uncoveredMethods = new TreeMap<>();
 
         for (int i = 0; i < classNodes.getLength(); i++) {
             Node node = classNodes.item(i);

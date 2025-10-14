@@ -13,8 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.TreeMap;
 
 public class SurefireXMLExecutionTimes {
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
@@ -28,10 +27,9 @@ public class SurefireXMLExecutionTimes {
             }
         });
 
-        Map<String, Double> map = new HashMap<>();
+        TreeMap<String, Double> map = new TreeMap<>();
 
         for (File file : files) {
-            Map<String, Double> map1 = new HashMap<>();
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             DocumentBuilder builder = dbf.newDocumentBuilder();
@@ -47,8 +45,6 @@ public class SurefireXMLExecutionTimes {
             String testSuiteName = testsuite.getAttributes().getNamedItem("name").getNodeValue();
             System.out.println("Test Suite: " + testSuiteName);
 //            System.out.println("Test Suite Execution Time: " + testSuiteExecutionTime);
-//            map1.put("overallTestSuiteExecution", testSuiteExecutionTime);
-//            map.put(testSuiteName, map1);
 
             NodeList testCaseNodes = doc.getElementsByTagName("testcase");
 
@@ -65,6 +61,4 @@ public class SurefireXMLExecutionTimes {
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(new FileWriter(outputPath), map);
 
     }
-
-    private static String xmlPath = "target/surefire-reports";
 }
