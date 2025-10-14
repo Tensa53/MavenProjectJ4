@@ -28,7 +28,7 @@ public class SurefireXMLExecutionTimes {
             }
         });
 
-        Map<String, Map<String, Double>> map = new HashMap<>();
+        Map<String, Double> map = new HashMap<>();
 
         for (File file : files) {
             Map<String, Double> map1 = new HashMap<>();
@@ -48,7 +48,7 @@ public class SurefireXMLExecutionTimes {
             System.out.println("Test Suite: " + testSuiteName);
 //            System.out.println("Test Suite Execution Time: " + testSuiteExecutionTime);
 //            map1.put("overallTestSuiteExecution", testSuiteExecutionTime);
-            map.put(testSuiteName, map1);
+//            map.put(testSuiteName, map1);
 
             NodeList testCaseNodes = doc.getElementsByTagName("testcase");
 
@@ -57,7 +57,7 @@ public class SurefireXMLExecutionTimes {
                 String testCaseName = node.getAttributes().getNamedItem("name").getNodeValue();
                 Double testCaseExecutionTime = Double.valueOf(node.getAttributes().getNamedItem("time").getNodeValue());
                 System.out.println("Test Case: " + testCaseName + " - Execution time: " + testCaseExecutionTime);
-                map1.put(testCaseName, testCaseExecutionTime);
+                map.put(testSuiteName+"."+testCaseName, testCaseExecutionTime);
             }
         }
 
