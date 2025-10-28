@@ -84,8 +84,7 @@ public class AverageSingleShotTime {
 
         JsonNode score = metrics.get("score");
         BigDecimal scoreB = new BigDecimal(score.toString(), new MathContext(5));
-        BigDecimal average = sum.divide(BigDecimal.valueOf(rawData.size()), new MathContext(5));
-        map.put(benchName.toString(), average);
+        map.put(benchName.toString(), scoreB);
     }
 
     private  static TreeMap<String, BigDecimal> map = new TreeMap<>();

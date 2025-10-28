@@ -5,7 +5,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -41,10 +40,8 @@ public class SurefireXMLExecutionTimes {
             }
 
             Node testsuite = doc.getElementsByTagName("testsuite").item(0);
-//            Double testSuiteExecutionTime = Double.valueOf(testsuite.getAttributes().getNamedItem("time").getNodeValue());
             String testSuiteName = testsuite.getAttributes().getNamedItem("name").getNodeValue();
             System.out.println("Test Suite: " + testSuiteName);
-//            System.out.println("Test Suite Execution Time: " + testSuiteExecutionTime);
 
             NodeList testCaseNodes = doc.getElementsByTagName("testcase");
 
