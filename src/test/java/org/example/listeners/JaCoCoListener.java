@@ -4,7 +4,7 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
-import static org.example.benchmarks.profilers.JaCoCoCoverageMatrix.updateCoverageMatrix;
+import static org.example.listeners.JaCoCoSplit.writeExecutionData;
 
 public class JaCoCoListener extends RunListener {
 
@@ -22,7 +22,7 @@ public class JaCoCoListener extends RunListener {
     @Override
     public void testFinished(Description description) throws Exception {
         System.out.println("Finished: " + getTestRun(description.getDisplayName()) + description.getMethodName());
-        updateCoverageMatrix(description.getMethodName(), description.getClassName(), "reports-coverage/junit/", "target/jacoco.exec", "target/classes/");
+        writeExecutionData(description.getMethodName(), description.getClassName(), "target/jacoco-junit/");
     }
 
     private String getTestRun(String displayName) {

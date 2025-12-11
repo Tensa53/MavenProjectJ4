@@ -6,8 +6,11 @@ import org.openjdk.jmh.profile.InternalProfiler;
 import org.openjdk.jmh.results.IterationResult;
 import org.openjdk.jmh.results.Result;
 import org.openjdk.jmh.runner.IterationType;
+
 import java.util.Collection;
 import java.util.Collections;
+
+import static org.example.benchmarks.profilers.JaCoCoSplit.writeExecutionData;
 
 public class JaCoCoProfiler implements InternalProfiler {
     @Override
@@ -59,7 +62,7 @@ public class JaCoCoProfiler implements InternalProfiler {
 
             }
 
-            JaCoCoCoverageMatrix.updateCoverageMatrix(methodName, className, "reports-coverage/jmh/", "target/bench.exec", "target/classes/");
+            writeExecutionData(methodName, className, "target/jacoco-jmh/");
         }
 
         return Collections.emptyList();

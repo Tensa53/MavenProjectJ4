@@ -1,6 +1,0 @@
-{
-  "org.example.banca.ContoBancario" : [ ],
-  "org.example.utente.Utente" : [ "org.example.utente.Utente.setAddress(String)", "org.example.utente.Utente.setTelephone(String)", "org.example.utente.Utente.prova(ArrayList<String>,Set<String>)" ],
-  "org.example.utente.personale.Amministratore" : [ ],
-  "org.example.utente.personale.Tecnico" : [ ]
-}
