@@ -1,18 +1,18 @@
-package org.example.utente;
+package org.example.user;
 
-import org.example.banca.ContoBancario;
+import org.example.bank.BankAccount;
 
 import java.util.ArrayList;
 import java.util.Set;
 
-public class Utente {
+public class User {
 
-    public Utente(String name, String surname, String telephone, String address, ContoBancario contoBancario) {
-        this.name = name;//aggiungo commento
-        this.surname = surname;//aggiunto altro commento
+    public User(String name, String surname, String telephone, String address, BankAccount bankAccount) {
+        this.name = name;
+        this.surname = surname;
         this.telephone = telephone;
         this.address = address;
-        this.contoBancario = contoBancario;
+        this.bankAccount = bankAccount;
     }
 
     public String getName() {
@@ -31,8 +31,8 @@ public class Utente {
         return address;
     }
 
-    public ContoBancario getContoBancario() {
-        return contoBancario;
+    public BankAccount getBankAccount() {
+        return bankAccount;
     }
 
     public void setName(String name) {
@@ -43,13 +43,13 @@ public class Utente {
         this.surname = surname;
     }
 
-    public void setContoBancario(ContoBancario contoBancario) {
-        this.contoBancario = contoBancario;
+    public void setBankAccount(BankAccount bankAccount) {
+        this.bankAccount = bankAccount;
     }
 
-    public void prova(ArrayList<String> prova, Set<String> provare) {
-        prova.add(name);
-        prova.add(surname);
+    public void attempt(ArrayList<String> attempt, Set<String> attempted) {
+        attempt.add(name);
+        attempted.add(surname);
     }
 
     public void setTelephone(String telephone) {
@@ -64,5 +64,5 @@ public class Utente {
     private String surname;
     private String telephone;
     private String address;
-    private ContoBancario contoBancario;
+    private BankAccount bankAccount;
 }

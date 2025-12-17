@@ -1,6 +1,6 @@
 package org.example.benchmarks.hndwrt;
 
-import org.example.utente.personale.Amministratore;
+import org.example.user.staff.Administrator;
 import org.openjdk.jmh.annotations.*;
 
 import java.util.concurrent.TimeUnit;
@@ -8,47 +8,47 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.SampleTime)
 @Fork(1)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class AmministratoreBenchmarkHndwrt {
+public class AdministratorBenchmarkHndwrt {
 
     @State(Scope.Thread)
     public static class MyState {
 
         @Setup(Level.Invocation)
         public void doSetup() {
-            amministratore = new Amministratore("John", "Doe", "HR");
+            administrator = new Administrator("John", "Doe", "HR");
         }
 
-        public Amministratore amministratore;
+        public Administrator administrator;
     }
 
     @Benchmark
     public String benchGetName(MyState myState) {
-        return myState.amministratore.getName();
+        return myState.administrator.getName();
     }
 
     @Benchmark
     public String benchGetSurname(MyState myState) {
-        return myState.amministratore.getSurname();
+        return myState.administrator.getSurname();
     }
 
     @Benchmark
     public String benchGetDepartment(MyState myState) {
-        return myState.amministratore.getDepartment();
+        return myState.administrator.getDepartment();
     }
 
     @Benchmark
     public void benchSetName(MyState myState) {
-        myState.amministratore.setName("Jane");
+        myState.administrator.setName("Jane");
     }
 
     @Benchmark
     public void benchSetSurname(MyState myState) {
-        myState.amministratore.setSurname("Foe");
+        myState.administrator.setSurname("Foe");
     }
 
     @Benchmark
     public void benchSetDepartment(MyState myState) {
-        myState.amministratore.setDepartment("IT");
+        myState.administrator.setDepartment("IT");
     }
 
 }

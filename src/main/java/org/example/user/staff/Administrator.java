@@ -1,7 +1,8 @@
-package org.example.utente.personale;
+package org.example.user.staff;
 
-public class Amministratore {
-    public Amministratore(String name, String surname, String department) {
+public class Administrator {
+
+    public Administrator(String name, String surname, String department) {
         this.name = name;
         this.surname = surname;
         this.department = department;

@@ -1,8 +1,8 @@
-package org.example.utente.personale;
+package org.example.user.staff;
 
-public class Tecnico {
+public class Technician {
 
-    public Tecnico(String name, String surname, String profession, int code) {
+    public Technician(String name, String surname, String profession, int code) {
         this.name = name;
         this.surname = surname;
         this.profession = profession;
